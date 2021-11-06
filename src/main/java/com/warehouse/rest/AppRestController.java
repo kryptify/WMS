@@ -92,11 +92,6 @@ public class AppRestController {
 	private TemplateEngine templateEngine;
 
 
-	// Test Api
-	@GetMapping("/")
-	public String getAPI() {
-		return "Hello Word";
-	}
 
 	// Country Api
 	@GetMapping("/countries")

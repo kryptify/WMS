@@ -764,22 +764,49 @@ public class SalesOrder {
     public void setIsApproved(Boolean isApproved) {
         this.isApproved = isApproved;
     }
-
+    
     public SalesOrder() {
+        
+    }
+
+    public SalesOrder(Long id, String soNo, String customerCode, String referenceOrderNo, Date targetDispatchDateTime,
+            Date createdAt, Date modifiedAt,Date soReceiptDate,String createdByUserName, String modifiedByUserName) {
+        this.id = id;
+        this.soNo = soNo;
+        this.customerCode = customerCode;
+        this.referenceOrderNo = referenceOrderNo;
+        this.targetDispatchDateTime = targetDispatchDateTime;
+        this.createdAt = new Timestamp(createdAt.getTime());
+        this.modifiedAt = new Timestamp(modifiedAt.getTime());
+        this.soReceiptDate = soReceiptDate;
+        this.createdByUserName = createdByUserName;
+        this.modifiedByUserName = modifiedByUserName;
+    }
+
+    public SalesOrder(Long id, String soNo, String referenceOrderNo, String fcNo, Date createdAt, Date modifiedAt,
+            String createdByUserName, String modifiedByUserName) {
+        this.id = id;
+        this.soNo = soNo;
+        this.referenceOrderNo = referenceOrderNo;
+        this.fcNo = fcNo;
+        this.createdAt = new Timestamp(createdAt.getTime());
+        this.modifiedAt = new Timestamp(modifiedAt.getTime());
+        this.createdByUserName = createdByUserName;
+        this.modifiedByUserName = modifiedByUserName;
     }
 
     public SalesOrder(Long id, String soNo, Long primaryCompanyId, String primaryCompanyName,
-                      String primaryCompanyCode, Long costBucketId, String costBucketName, String costBucketCode,
-                      Long customerId, String customerName, String customerCode, TransactionTypeEnum transactionType,
-                      String referenceOrderNo, String salesPerson, String email, String phone,
-                      Long customerBillToAddressId, String billTo, Long customerShipToAddressId, String shipTo,
-                      Long soTypeId, String soTypeName, String soTypeCode, TradeTermEnum tradeTermEnum,
-                      ShipModeEnum shipModeEnum, Long countryId, String countryName,
-                      String destinationPort, Long freighterId, String freighterName, String freighterCode, String fcNo,
-                      Boolean foc, Float totalSoAmt, Date soReceiptDate, Date targetDispatchDateTime, Boolean validateRefSo,
-                      Long vasActivityId, String vasActivityName, String vasActivityCode, Boolean cod,
-                      Boolean allocateFromCrossDock, Date createdAt, Date modifiedAt, String createdByUserName,
-                      String modifiedByUserName) {
+            String primaryCompanyCode,  Long costBucketId, String costBucketName, String costBucketCode,
+            Long customerId, String customerName, String customerCode, TransactionTypeEnum transactionType,
+            String referenceOrderNo, String salesPerson, String email, String phone,
+             Long customerBillToAddressId, String billTo,  Long customerShipToAddressId, String shipTo,
+             Long soTypeId, String soTypeName, String soTypeCode, TradeTermEnum tradeTermEnum,
+             ShipModeEnum shipModeEnum, Long countryId, String countryName,
+            String destinationPort, Long freighterId, String freighterName, String freighterCode, String fcNo,
+            Boolean foc, Float totalSoAmt, Date soReceiptDate, Date targetDispatchDateTime, Boolean validateRefSo,
+            Long vasActivityId, String vasActivityName, String vasActivityCode, Boolean cod,
+            Boolean allocateFromCrossDock, Date createdAt, Date modifiedAt, String createdByUserName,
+            String modifiedByUserName) {
         this.id = id;
         this.soNo = soNo;
         this.primaryCompanyId = primaryCompanyId;
@@ -854,5 +881,9 @@ public class SalesOrder {
                 + ", validateRefSo=" + validateRefSo + ", vasActivity=" + vasActivity + ", vasActivityCode="
                 + vasActivityCode + ", vasActivityId=" + vasActivityId + ", vasActivityName=" + vasActivityName + "]";
     }
+
+    
+
+    
 
 }

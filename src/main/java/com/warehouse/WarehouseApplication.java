@@ -61,6 +61,7 @@ public class WarehouseApplication extends SpringBootServletInitializer implement
         return builder.sources(WarehouseApplication.class);
     }
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(WarehouseApplication.class, args);
         

@@ -1,6 +1,6 @@
-package com.warehouse.inventory.inventoryrecounciliation.stock;
+package com.warehouse.inventory.inventoryrecounciliation.cycle;
 
-public class StockRequest {
+public class CycleRequest {
 
     private Long id;
 

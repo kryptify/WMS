@@ -1,4 +1,4 @@
-package com.warehouse.inventory.inventoryrecounciliation.stock;
+package com.warehouse.inventory.inventoryrecounciliation.cycle;
 
 import java.sql.Timestamp;
 
@@ -14,8 +14,9 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.warehouse.additionalsetup.uom.Uom;
 import com.warehouse.administration.user.User;
-import com.warehouse.setup.location.Location;
+import com.warehouse.setup.sku.Sku;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
@@ -23,29 +24,48 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "inventory_stock_location", schema = "public")
-public class StockLocation {
+@Table(name = "inventory_cycle_sku", schema = "public")
+public class CycleSku {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "stock_id", insertable = false, updatable = false)
-    private Long stockId;
+    @Column(name = "cycle_id", insertable = false, updatable = false)
+    private Long cycleId;
 
     @ManyToOne
-    @JoinColumn(name = "location", nullable = false)
+    @JoinColumn(name = "sku", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private Location location;
+    private Sku sku;
 
     @NotNull
-    @Column(name = "location", insertable = false, updatable = false)
-    private Long locationId;
+    @Column(name = "sku", insertable = false, updatable = false)
+    private Long skuId;
 
     @Transient
-    private String LocationCode;
+    private String skuName;
+
+    @Transient
+    private String skuCode;
+
+    @ManyToOne
+    @JoinColumn(name = "uom", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Uom uom;
+
+    @NotNull
+    @Column(name = "uom_id", insertable = false, updatable = false)
+    private Long uomId;
+
+    @Transient
+    private String uomName;
+
+    @Transient
+    private String uomCode;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -81,19 +101,25 @@ public class StockLocation {
     @Transient
     private String modifiedByUserName;
 
-    public StockLocation() {
+    public CycleSku() {
     }
 
-    public StockLocation(Long id, Long stockId, Location location, @NotNull Long locationId, String locationCode,
-            Timestamp createdAt, Timestamp modifiedAt, User createdBy, Long createdById, User modifiedBy,
-            Long modifiedById, String createdByUserName, String modifiedByUserName) {
+    public CycleSku(Long id, Long cycleId, Sku sku, @NotNull Long skuId, String skuName, String skuCode, Uom uom,
+            @NotNull Long uomId, String uomName, String uomCode, Timestamp createdAt, Timestamp modifiedAt,
+            User createdBy, Long createdById, User modifiedBy, Long modifiedById, String createdByUserName,
+            String modifiedByUserName) {
         this.id = id;
-        this.stockId = stockId;
-        this.location = location;
-        this.locationId = locationId;
-        LocationCode = locationCode;
-        this.createdAt = new Timestamp(createdAt.getTime());
-        this.modifiedAt = new Timestamp(modifiedAt.getTime());
+        this.cycleId = cycleId;
+        this.sku = sku;
+        this.skuId = skuId;
+        this.skuName = skuName;
+        this.skuCode = skuCode;
+        this.uom = uom;
+        this.uomId = uomId;
+        this.uomName = uomName;
+        this.uomCode = uomCode;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
         this.createdBy = createdBy;
         this.createdById = createdById;
         this.modifiedBy = modifiedBy;
@@ -110,36 +136,76 @@ public class StockLocation {
         this.id = id;
     }
 
-    public Long getStockId() {
-        return stockId;
+    public Long getCycleId() {
+        return cycleId;
     }
 
-    public void setStockId(Long stockId) {
-        this.stockId = stockId;
+    public void setCycleId(Long cycleId) {
+        this.cycleId = cycleId;
     }
 
-    public Location getLocation() {
-        return location;
+    public Sku getSku() {
+        return sku;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setSku(Sku sku) {
+        this.sku = sku;
     }
 
-    public Long getLocationId() {
-        return locationId;
+    public Long getSkuId() {
+        return skuId;
     }
 
-    public void setLocationId(Long locationId) {
-        this.locationId = locationId;
+    public void setSkuId(Long skuId) {
+        this.skuId = skuId;
     }
 
-    public String getLocationCode() {
-        return LocationCode;
+    public String getSkuName() {
+        return skuName;
     }
 
-    public void setLocationCode(String locationCode) {
-        LocationCode = locationCode;
+    public void setSkuName(String skuName) {
+        this.skuName = skuName;
+    }
+
+    public String getSkuCode() {
+        return skuCode;
+    }
+
+    public void setSkuCode(String skuCode) {
+        this.skuCode = skuCode;
+    }
+
+    public Uom getUom() {
+        return uom;
+    }
+
+    public void setUom(Uom uom) {
+        this.uom = uom;
+    }
+
+    public Long getUomId() {
+        return uomId;
+    }
+
+    public void setUomId(Long uomId) {
+        this.uomId = uomId;
+    }
+
+    public String getUomName() {
+        return uomName;
+    }
+
+    public void setUomName(String uomName) {
+        this.uomName = uomName;
+    }
+
+    public String getUomCode() {
+        return uomCode;
+    }
+
+    public void setUomCode(String uomCode) {
+        this.uomCode = uomCode;
     }
 
     public Timestamp getCreatedAt() {
@@ -204,5 +270,15 @@ public class StockLocation {
 
     public void setModifiedByUserName(String modifiedByUserName) {
         this.modifiedByUserName = modifiedByUserName;
+    }
+
+    @Override
+    public String toString() {
+        return "CycleSku{" + "id=" + id + ", cycleId=" + cycleId + ", sku=" + sku + ", skuId=" + skuId + ", skuName='"
+                + skuName + '\'' + ", skuCode='" + skuCode + '\'' + ", uom=" + uom + ", uomId=" + uomId + ", uomName='"
+                + uomName + '\'' + ", uomCode='" + uomCode + '\'' + ", createdAt=" + createdAt + ", modifiedAt="
+                + modifiedAt + ", createdBy=" + createdBy + ", createdById=" + createdById + ", modifiedBy="
+                + modifiedBy + ", modifiedById=" + modifiedById + ", createdByUserName='" + createdByUserName + '\''
+                + ", modifiedByUserName='" + modifiedByUserName + '\'' + '}';
     }
 }

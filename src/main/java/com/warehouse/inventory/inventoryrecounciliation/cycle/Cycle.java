@@ -1,4 +1,4 @@
-package com.warehouse.inventory.inventoryrecounciliation.stock;
+package com.warehouse.inventory.inventoryrecounciliation.cycle;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -29,21 +29,21 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "inventory_stock", schema = "public")
-public class Stock {
+@Table(name = "inventory_cycle", schema = "public")
+public class Cycle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "stock_no")
-    private String stockNo;
+    @Column(name = "cycle_no")
+    private String cycleNo;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "stock_id", referencedColumnName = "id")
+    @JoinColumn(name = "cycle_id", referencedColumnName = "id")
     @NotNull
-    private List<StockLocation> stockLocation;
+    private List<CycleSku> cycleSku;
 
     @ManyToOne
     @JoinColumn(name = "primary_company_id", nullable = false)
@@ -93,11 +93,11 @@ public class Stock {
     @Transient
     private String costBucketCode;
 
-    @Column(name = "include_locations_moved_in")
-    private Long includeLocationsThatMovedIn;
+    @Column(name = "include_skus_moved_in")
+    private Long includeSkusThatMovedIn;
 
-    @Column(name = "inventory_reconciliation_instruction_name")
-    private Boolean inventoryReconciliationInstructionName;
+    @Column(name = "cycle_count_instruction_name")
+    private String cycleCountInstructionName;
 
     @Column(name = "is_blind_count")
     private Boolean isBlindCount = true;
@@ -105,8 +105,23 @@ public class Stock {
     @Column(name = "is_dirty")
     private Boolean isDirty = false;
 
-    @Column(name = "is_existing_stock_count_name")
-    private Boolean isExistingStockCountName = true;
+    @Column(name = "is_existing_cycle_count_name")
+    private Boolean isExistingCycleCountName = true;
+
+    @Column(name = "is_rank_a")
+    private Boolean isRankA = false;
+
+    @Column(name = "is_rank_b")
+    private Boolean isRankB = false;
+
+    @Column(name = "is_rank_c")
+    private Boolean isRankC = false;
+
+    @Column(name = "is_rank_d")
+    private Boolean isRankD = false;
+
+    @Column(name = "is_rank_e")
+    private Boolean isRankE = false;
 
     @Column(name = "is_recount_on_batch_no")
     private Boolean isRecountOnBatchNo = false;
@@ -120,9 +135,6 @@ public class Stock {
     @Column(name = "is_recount_on_manufacture_date")
     private Boolean isRecountOnManufactureDate = false;
 
-    @Column(name = "is_recount_on_pack_number")
-    private Boolean isRecountOnPackNumber = false;
-
     @Column(name = "is_recount_on_serial_no")
     private Boolean isRecountOnSerialNo = false;
 
@@ -133,13 +145,13 @@ public class Stock {
     private Boolean isSelected;
 
     @Column(name = "location_hierarchy_id")
-    private String locationHierarchyID;
-
-    @Column(name = "locations_movedInUnit")
-    private DurationTimeEnum locationsMovedInUnit;
+    private String locationHierarchyId;
 
     @Column(name = "max_no_of_lines_per_instruction")
     private Long maxNoOfLinesPerInstruction;
+
+    @Column(name = "locations_movedInUnit")
+    private DurationTimeEnum skusMovedInUnit;
 
     @Column(name = "verify_batch_no")
     private Boolean verifyBatchNo = true;
@@ -149,9 +161,6 @@ public class Stock {
 
     @Column(name = "verify_manufacture_date")
     private Boolean verifyManufactureDate = true;
-
-    @Column(name = "verify_pack_number")
-    private Boolean verifyPackNumber = true;
 
     @Column(name = "verify_serial_no")
     private Boolean verifySerialNo = true;
@@ -187,70 +196,6 @@ public class Stock {
     @Transient
     private String createdByUserName;
 
-    @Transient
-    private String modifiedByUserName;
-
-    public Stock() {
-    }
-
-    public Stock(Long id, String stockNo, @NotNull List<StockLocation> stockLocation, PrimaryCompany primaryCompany,
-            @NotNull Long primaryCompanyId, String primaryCompanyName, String primaryCompanyCode, Warehouse warehouse,
-            @NotNull Long warehouseId, String warehouseName, String warehouseCode, CostBucket costBucket,
-            @NotNull Long costBucketId, String costBucketName, String costBucketCode, Long includeLocationsThatMovedIn,
-            Boolean inventoryReconciliationInstructionName, Boolean isBlindCount, Boolean isDirty,
-            Boolean isExistingStockCountName, Boolean isRecountOnBatchNo, Boolean isRecountOnExpiryDate,
-            Boolean isRecountOnLocation, Boolean isRecountOnManufactureDate, Boolean isRecountOnPackNumber,
-            Boolean isRecountOnSerialNo, Boolean isRecountRequired, Boolean isSelected, String locationHierarchyID,
-            DurationTimeEnum locationsMovedInUnit, Long maxNoOfLinesPerInstruction, Boolean verifyBatchNo,
-            Boolean verifyExpiryDate, Boolean verifyManufactureDate, Boolean verifyPackNumber, Boolean verifySerialNo,
-            Timestamp createdAt, Timestamp modifiedAt, User createdBy, Long createdById, User modifiedBy,
-            Long modifiedById, String createdByUserName, String modifiedByUserName) {
-        this.id = id;
-        this.stockNo = stockNo;
-        this.stockLocation = stockLocation;
-        this.primaryCompany = primaryCompany;
-        this.primaryCompanyId = primaryCompanyId;
-        this.primaryCompanyName = primaryCompanyName;
-        this.primaryCompanyCode = primaryCompanyCode;
-        this.warehouse = warehouse;
-        this.warehouseId = warehouseId;
-        this.warehouseName = warehouseName;
-        this.warehouseCode = warehouseCode;
-        this.costBucket = costBucket;
-        this.costBucketId = costBucketId;
-        this.costBucketName = costBucketName;
-        this.costBucketCode = costBucketCode;
-        this.includeLocationsThatMovedIn = includeLocationsThatMovedIn;
-        this.inventoryReconciliationInstructionName = inventoryReconciliationInstructionName;
-        this.isBlindCount = isBlindCount;
-        this.isDirty = isDirty;
-        this.isExistingStockCountName = isExistingStockCountName;
-        this.isRecountOnBatchNo = isRecountOnBatchNo;
-        this.isRecountOnExpiryDate = isRecountOnExpiryDate;
-        this.isRecountOnLocation = isRecountOnLocation;
-        this.isRecountOnManufactureDate = isRecountOnManufactureDate;
-        this.isRecountOnPackNumber = isRecountOnPackNumber;
-        this.isRecountOnSerialNo = isRecountOnSerialNo;
-        this.isRecountRequired = isRecountRequired;
-        this.isSelected = isSelected;
-        this.locationHierarchyID = locationHierarchyID;
-        this.locationsMovedInUnit = locationsMovedInUnit;
-        this.maxNoOfLinesPerInstruction = maxNoOfLinesPerInstruction;
-        this.verifyBatchNo = verifyBatchNo;
-        this.verifyExpiryDate = verifyExpiryDate;
-        this.verifyManufactureDate = verifyManufactureDate;
-        this.verifyPackNumber = verifyPackNumber;
-        this.verifySerialNo = verifySerialNo;
-        this.createdAt = new Timestamp(createdAt.getTime());
-        this.modifiedAt = new Timestamp(modifiedAt.getTime());
-        this.createdBy = createdBy;
-        this.createdById = createdById;
-        this.modifiedBy = modifiedBy;
-        this.modifiedById = modifiedById;
-        this.createdByUserName = createdByUserName;
-        this.modifiedByUserName = modifiedByUserName;
-    }
-
     public Long getId() {
         return id;
     }
@@ -259,20 +204,20 @@ public class Stock {
         this.id = id;
     }
 
-    public String getStockNo() {
-        return stockNo;
+    public String getCycleNo() {
+        return cycleNo;
     }
 
-    public void setStockNo(String stockNo) {
-        this.stockNo = stockNo;
+    public void setCycleNo(String cycleNo) {
+        this.cycleNo = cycleNo;
     }
 
-    public List<StockLocation> getStockLocation() {
-        return stockLocation;
+    public List<CycleSku> getCycleSku() {
+        return cycleSku;
     }
 
-    public void setStockLocation(List<StockLocation> stockLocation) {
-        this.stockLocation = stockLocation;
+    public void setCycleSku(List<CycleSku> cycleSku) {
+        this.cycleSku = cycleSku;
     }
 
     public PrimaryCompany getPrimaryCompany() {
@@ -371,20 +316,20 @@ public class Stock {
         this.costBucketCode = costBucketCode;
     }
 
-    public Long getIncludeLocationsThatMovedIn() {
-        return includeLocationsThatMovedIn;
+    public Long getIncludeSkusThatMovedIn() {
+        return includeSkusThatMovedIn;
     }
 
-    public void setIncludeLocationsThatMovedIn(Long includeLocationsThatMovedIn) {
-        this.includeLocationsThatMovedIn = includeLocationsThatMovedIn;
+    public void setIncludeSkusThatMovedIn(Long includeSkusThatMovedIn) {
+        this.includeSkusThatMovedIn = includeSkusThatMovedIn;
     }
 
-    public Boolean getInventoryReconciliationInstructionName() {
-        return inventoryReconciliationInstructionName;
+    public String getCycleCountInstructionName() {
+        return cycleCountInstructionName;
     }
 
-    public void setInventoryReconciliationInstructionName(Boolean inventoryReconciliationInstructionName) {
-        this.inventoryReconciliationInstructionName = inventoryReconciliationInstructionName;
+    public void setCycleCountInstructionName(String cycleCountInstructionName) {
+        this.cycleCountInstructionName = cycleCountInstructionName;
     }
 
     public Boolean getBlindCount() {
@@ -403,20 +348,60 @@ public class Stock {
         isDirty = dirty;
     }
 
-    public Boolean getExistingStockCountName() {
-        return isExistingStockCountName;
+    public Boolean getExistingCycleCountName() {
+        return isExistingCycleCountName;
     }
 
-    public void setExistingStockCountName(Boolean existingStockCountName) {
-        isExistingStockCountName = existingStockCountName;
+    public void setExistingCycleCountName(Boolean existingCycleCountName) {
+        isExistingCycleCountName = existingCycleCountName;
     }
 
-    public Boolean getRecountOnBatchNo() {
+    public Boolean getRankA() {
+        return isRankA;
+    }
+
+    public void setRankA(Boolean rankA) {
+        isRankA = rankA;
+    }
+
+    public Boolean getRankB() {
+        return isRankB;
+    }
+
+    public void setRankB(Boolean rankB) {
+        isRankB = rankB;
+    }
+
+    public Boolean getRankC() {
+        return isRankC;
+    }
+
+    public void setRankC(Boolean rankC) {
+        isRankC = rankC;
+    }
+
+    public Boolean getRankD() {
+        return isRankD;
+    }
+
+    public void setRankD(Boolean rankD) {
+        isRankD = rankD;
+    }
+
+    public Boolean getRankE() {
+        return isRankE;
+    }
+
+    public void setRankE(Boolean rankE) {
+        isRankE = rankE;
+    }
+
+    public Boolean getRecountOnBatch() {
         return isRecountOnBatchNo;
     }
 
-    public void setRecountOnBatchNo(Boolean recountOnBatchNo) {
-        isRecountOnBatchNo = recountOnBatchNo;
+    public void setRecountOnBatch(Boolean recountOnBatch) {
+        isRecountOnBatchNo = recountOnBatch;
     }
 
     public Boolean getRecountOnExpiryDate() {
@@ -443,14 +428,6 @@ public class Stock {
         isRecountOnManufactureDate = recountOnManufactureDate;
     }
 
-    public Boolean getRecountOnPackNumber() {
-        return isRecountOnPackNumber;
-    }
-
-    public void setRecountOnPackNumber(Boolean recountOnPackNumber) {
-        isRecountOnPackNumber = recountOnPackNumber;
-    }
-
     public Boolean getRecountOnSerialNo() {
         return isRecountOnSerialNo;
     }
@@ -475,20 +452,12 @@ public class Stock {
         isSelected = selected;
     }
 
-    public String getLocationHierarchyID() {
-        return locationHierarchyID;
+    public String getLocationHierarchyId() {
+        return locationHierarchyId;
     }
 
-    public void setLocationHierarchyID(String locationHierarchyID) {
-        this.locationHierarchyID = locationHierarchyID;
-    }
-
-    public DurationTimeEnum getLocationsMovedInUnit() {
-        return locationsMovedInUnit;
-    }
-
-    public void setLocationsMovedInUnit(DurationTimeEnum locationsMovedInUnit) {
-        this.locationsMovedInUnit = locationsMovedInUnit;
+    public void setLocationHierarchyId(String locationHierarchyID) {
+        this.locationHierarchyId = locationHierarchyID;
     }
 
     public Long getMaxNoOfLinesPerInstruction() {
@@ -497,6 +466,14 @@ public class Stock {
 
     public void setMaxNoOfLinesPerInstruction(Long maxNoOfLinesPerInstruction) {
         this.maxNoOfLinesPerInstruction = maxNoOfLinesPerInstruction;
+    }
+
+    public DurationTimeEnum getSkusMovedInUnit() {
+        return skusMovedInUnit;
+    }
+
+    public void setSkusMovedInUnit(DurationTimeEnum skusMovedInUnit) {
+        this.skusMovedInUnit = skusMovedInUnit;
     }
 
     public Boolean getVerifyBatchNo() {
@@ -521,14 +498,6 @@ public class Stock {
 
     public void setVerifyManufactureDate(Boolean verifyManufactureDate) {
         this.verifyManufactureDate = verifyManufactureDate;
-    }
-
-    public Boolean getVerifyPackNumber() {
-        return verifyPackNumber;
-    }
-
-    public void setVerifyPackNumber(Boolean verifyPackNumber) {
-        this.verifyPackNumber = verifyPackNumber;
     }
 
     public Boolean getVerifySerialNo() {
@@ -601,5 +570,98 @@ public class Stock {
 
     public void setModifiedByUserName(String modifiedByUserName) {
         this.modifiedByUserName = modifiedByUserName;
+    }
+
+    @Transient
+    private String modifiedByUserName;
+
+    public Cycle() {
+    }
+
+    public Cycle(Long id, String cycleNo, @NotNull List<CycleSku> cycleSku, PrimaryCompany primaryCompany,
+            @NotNull Long primaryCompanyId, String primaryCompanyName, String primaryCompanyCode, Warehouse warehouse,
+            @NotNull Long warehouseId, String warehouseName, String warehouseCode, CostBucket costBucket,
+            @NotNull Long costBucketId, String costBucketName, String costBucketCode, Long includeSkusThatMovedIn,
+            String cycleCountInstructionName, Boolean isBlindCount, Boolean isDirty, Boolean isExistingCycleCountName,
+            Boolean isRankA, Boolean isRankB, Boolean isRankC, Boolean isRankD, Boolean isRankE,
+            Boolean isRecountOnBatchNo, Boolean isRecountOnExpiryDate, Boolean isRecountOnLocation,
+            Boolean isRecountOnManufactureDate, Boolean isRecountOnSerialNo, Boolean isRecountRequired,
+            Boolean isSelected, String locationHierarchyId, Long maxNoOfLinesPerInstruction,
+            DurationTimeEnum skusMovedInUnit, Boolean verifyBatchNo, Boolean verifyExpiryDate,
+            Boolean verifyManufactureDate, Boolean verifySerialNo, Timestamp createdAt, Timestamp modifiedAt,
+            User createdBy, Long createdById, User modifiedBy, Long modifiedById, String createdByUserName,
+            String modifiedByUserName) {
+        this.id = id;
+        this.cycleNo = cycleNo;
+        this.cycleSku = cycleSku;
+        this.primaryCompany = primaryCompany;
+        this.primaryCompanyId = primaryCompanyId;
+        this.primaryCompanyName = primaryCompanyName;
+        this.primaryCompanyCode = primaryCompanyCode;
+        this.warehouse = warehouse;
+        this.warehouseId = warehouseId;
+        this.warehouseName = warehouseName;
+        this.warehouseCode = warehouseCode;
+        this.costBucket = costBucket;
+        this.costBucketId = costBucketId;
+        this.costBucketName = costBucketName;
+        this.costBucketCode = costBucketCode;
+        this.includeSkusThatMovedIn = includeSkusThatMovedIn;
+        this.cycleCountInstructionName = cycleCountInstructionName;
+        this.isBlindCount = isBlindCount;
+        this.isDirty = isDirty;
+        this.isExistingCycleCountName = isExistingCycleCountName;
+        this.isRankA = isRankA;
+        this.isRankB = isRankB;
+        this.isRankC = isRankC;
+        this.isRankD = isRankD;
+        this.isRankE = isRankE;
+        this.isRecountOnBatchNo = isRecountOnBatchNo;
+        this.isRecountOnExpiryDate = isRecountOnExpiryDate;
+        this.isRecountOnLocation = isRecountOnLocation;
+        this.isRecountOnManufactureDate = isRecountOnManufactureDate;
+        this.isRecountOnSerialNo = isRecountOnSerialNo;
+        this.isRecountRequired = isRecountRequired;
+        this.isSelected = isSelected;
+        this.locationHierarchyId = locationHierarchyId;
+        this.maxNoOfLinesPerInstruction = maxNoOfLinesPerInstruction;
+        this.skusMovedInUnit = skusMovedInUnit;
+        this.verifyBatchNo = verifyBatchNo;
+        this.verifyExpiryDate = verifyExpiryDate;
+        this.verifyManufactureDate = verifyManufactureDate;
+        this.verifySerialNo = verifySerialNo;
+        this.createdAt = new Timestamp(createdAt.getTime());
+        this.modifiedAt = new Timestamp(modifiedAt.getTime());
+        this.createdBy = createdBy;
+        this.createdById = createdById;
+        this.modifiedBy = modifiedBy;
+        this.modifiedById = modifiedById;
+        this.createdByUserName = createdByUserName;
+        this.modifiedByUserName = modifiedByUserName;
+    }
+
+    @Override
+    public String toString() {
+        return "Cycle{" + "id=" + id + ", cycleNo='" + cycleNo + '\'' + ", cycleSku=" + cycleSku + ", primaryCompany="
+                + primaryCompany + ", primaryCompanyId=" + primaryCompanyId + ", primaryCompanyName='"
+                + primaryCompanyName + '\'' + ", primaryCompanyCode='" + primaryCompanyCode + '\'' + ", warehouse="
+                + warehouse + ", warehouseId=" + warehouseId + ", warehouseName='" + warehouseName + '\''
+                + ", warehouseCode='" + warehouseCode + '\'' + ", costBucket=" + costBucket + ", costBucketId="
+                + costBucketId + ", costBucketName='" + costBucketName + '\'' + ", costBucketCode='" + costBucketCode
+                + '\'' + ", includeSkusThatMovedIn=" + includeSkusThatMovedIn + ", cycleCountInstructionName='"
+                + cycleCountInstructionName + '\'' + ", isBlindCount=" + isBlindCount + ", isDirty=" + isDirty
+                + ", isExistingCycleCountName=" + isExistingCycleCountName + ", isRankA=" + isRankA + ", isRankB="
+                + isRankB + ", isRankC=" + isRankC + ", isRankD=" + isRankD + ", isRankE=" + isRankE
+                + ", isRecountOnBatchNo=" + isRecountOnBatchNo + ", isRecountOnExpiryDate=" + isRecountOnExpiryDate
+                + ", isRecountOnLocation=" + isRecountOnLocation + ", isRecountOnManufactureDate="
+                + isRecountOnManufactureDate + ", isRecountOnSerialNo=" + isRecountOnSerialNo + ", isRecountRequired="
+                + isRecountRequired + ", isSelected=" + isSelected + ", locationHierarchyId='" + locationHierarchyId
+                + '\'' + ", maxNoOfLinesPerInstruction=" + maxNoOfLinesPerInstruction + ", skusMovedInUnit="
+                + skusMovedInUnit + ", verifyBatchNo=" + verifyBatchNo + ", verifyExpiryDate=" + verifyExpiryDate
+                + ", verifyManufactureDate=" + verifyManufactureDate + ", verifySerialNo=" + verifySerialNo
+                + ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + ", createdBy=" + createdBy
+                + ", createdById=" + createdById + ", modifiedBy=" + modifiedBy + ", modifiedById=" + modifiedById
+                + ", createdByUserName='" + createdByUserName + '\'' + ", modifiedByUserName='" + modifiedByUserName
+                + '\'' + '}';
     }
 }

@@ -10,5 +10,4 @@ public interface LocationRepository extends JpaRepository<Location,Long>{
     Optional<Location> findByCodeAndLocationHierarchyId(String code,Long locationHierarchyId);
     Optional<Location> findByCodeAndLocationHierarchyIdAndIdNot(String code,Long locationHierarchyId,Long id);
 
-    Optional<Location> findByCode(String Code);
 }

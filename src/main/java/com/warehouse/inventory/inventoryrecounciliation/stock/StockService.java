@@ -3,7 +3,7 @@ package com.warehouse.inventory.inventoryrecounciliation.stock;
 import java.util.List;
 
 public interface StockService {
-    
+
     // Stock Api
     public String validateStockRequest(Stock theStockRequest);
 
